@@ -1,26 +1,43 @@
 <template>
     <div class="api">
+        <span v-if="error">{{ error }}</span>
+        <section v-if="api">
         <div class="header" @click="open = !open">
-            <span class="title">{{specInfo.title}}</span>            
-            <span class="host">{{specInfo.host}}</span>            
-            <span class="description">{{specInfo.description}}</span>
+            <span class="title">{{api.info.title}}</span>            
+            <span class="host">{{api.host}}</span>            
+            <!-- <span class="description">{{api.description}}</span> -->
         </div>
 
         <div class="table" v-show="isOpen">
-            <slot></slot>
-            <request v-for="(item, index) in specInfo.request" 
-            
-                :key="index"
-                :method="item.method"
-                :url="item.url"
-                :description="item.description"
-                :headers="item.headers"
-                :path="item.path"
-                :params="item.params"
-                :body="item.body"
-             />
+
+            <section v-bind:key="index" v-for="(tag, index) in tags">
+                <h3>{{tag.name}}</h3>
+                <p>{{tag.description}}</p>
+
+                <div v-bind:key="path" v-for="(resources, path) in paths[tag.name]"> 
+                    <h4>{{path}}</h4>
+                    <slot></slot>
+                    <request v-for="(item, method) in resources" 
+                    
+                        :key="method"
+                        :method="method"
+                        :url="path"
+                        :description="item.summary"
+                        :headers="item.headers"
+                        :path="item.parameters"
+                        :params="item.parameters"
+                        :body="item.responses"
+                    />
+                </div>
+                
+            </section>    
+          
              
         </div>
+
+        </section>
+
+
     </div>
 </template>
 
@@ -28,14 +45,96 @@
 
 import request from './request.vue'
 
+var SwaggerParser = require('swagger-parser');
+
 export default {
     props: [ 'spec' ],
     data () {
 
         return {
             specInfo: this.spec,
-            open: this.spec.opened || false,
+            open: this.spec.opened || true,
+            api:'',
+            error: undefined,
+            tags:[{
+                name:'default',
+                description:''
+            }],
+            paths:[]
         }
+    },
+    mounted () {
+
+        SwaggerParser.validate(this.spec,(err, api)=> {
+            if (err) {
+                console.error(err);
+                this.error = err;
+            }
+            else {
+
+                  this.api = api;
+
+                   console.log(api);
+
+                    let pathKeys = Object.keys(api.paths);
+
+                  if(api.tags.length > 0){
+                      this.tags = api.tags;
+
+
+                        this.tags.forEach(tag => {
+                            
+                               // console.log(tag.name);
+                            let obj  = {};
+
+                            Object.values(api.paths).map((resource,path)=>{
+
+
+                                Object.values(resource).forEach((method,k) => {
+
+                                    let mObj  = {};
+
+                                    Object.keys(resource).forEach(m => {
+
+                                        mObj[m] = method;
+
+                                           
+                                    });
+                            
+                                    if(method.tags.indexOf(tag.name) != -1){
+                                        console.log(pathKeys[path]);
+                                        obj[pathKeys[path]] = mObj;
+                                        
+                                       
+                                    }
+
+                                });
+
+                                 this.paths[tag.name] = obj;
+                                  
+
+                            });
+                        });
+
+
+                    //console.log(this.paths);
+                    
+                    //   api.paths.map((x,key)=>{
+
+                    //       console.log(x,key);
+
+                    //   })
+                  }
+
+
+
+
+                 
+
+            }
+        });
+
+
     },
     computed: {
         isOpen () {
@@ -55,7 +154,7 @@ export default {
     .header {
         display: flex;
         align-items: center;
-        padding: 10px 20px 10px 10px;
+        padding: 10px 20px 10px 0px;
         cursor: pointer;
         transition: all .2s;
         border-bottom: 1px solid rgba(59,65,81,.3);
@@ -89,5 +188,15 @@ export default {
         }
 
     }
+
+    .table{
+        h3{
+            margin: 15px 0px;
+        }
+
+        h4{
+            margin: 10px 0px;
+        }
+    } 
 }
 </style>

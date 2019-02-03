@@ -87,32 +87,21 @@ export default {
 
         parsePath () {
 
-            const paths = this.url.split('/').filter(it => {
-                return it.indexOf('{') === 0 && it.indexOf('}') === (it.length - 1)
-            }).map(it => {
-                return it.replace(/\{/g, '').replace(/\}/g, '')
-            })
+
+           const paths =  this.params.filter(param=>{
+                return param.in == "path";
+            });
+
 
             return paths.map(key => {
                 
-                let obj = this.path.filter(it => {
-                    return it.key === key    
-                })[0]
-
-                if (!obj) {
-                    obj = { key : key, value: '' }
-                }
-
-                if (typeof obj === 'string') {
-                    obj = { key : key, value: obj}
-                }
-
+        
                 return Object.assign({
                     source: 'path',
                     required: true,
                     type: 'string',
                     description: ''
-                }, this.parseItems(obj))
+                }, key)
             })
         },
 
@@ -186,21 +175,26 @@ export default {
          * 
          */
         parseQuery (params) {
-            return Object.keys(params).map(key => {
+
+
+            const query =  this.params.filter(param=>{
+                return param.in == "query";
+            });
+
+
+            return query.map(key => {
                 
-                let obj = params[key]
-
-                if (typeof obj === 'string') {
-                    obj = { key : key, value: obj  }
-                }
-
+        
                 return Object.assign({
-                    source: 'query',                    
+                    source: 'query',
+                    required: true,
                     type: 'string',
-                    required: false,
                     description: ''
-                }, this.parseItems(obj)) 
+                }, key)
             })
+
+
+           
         },        
         parseHeaderValue (headerValue) {
             const arr = headerValue.match(/\{\{(.*)\}\}/g)
@@ -245,9 +239,46 @@ export default {
         align-items: center;
     }
 
+    // &.post {
+    //     border-color: #49cc90;
+    //     background: rgba(73,204,144,0.1);
+
+    //     .method {
+    //         background: #49cc90;
+    //     }
+    // }
+
+    // &.put {
+    //     border-color: #fca130;
+    //     background: rgba(252,161,48,0.1);
+
+    //     .method {
+    //         background: #fca130;
+    //     }
+    // }
+
+    // &.get {
+    //     border-color: #61affe;
+    //     background: rgba(97,175,254,0.1);
+
+    //     .method {
+    //         background: #61affe;
+    //     }
+    // }    
+
+    // &.delete {
+    //     border-color: #f93e3e;
+    //     background: rgba(249,62,62,0.1);
+
+    //     .method {
+    //         background: #f93e3e;
+    //     }
+    // }
+
+
     &.post {
         border-color: #49cc90;
-        background: rgba(73,204,144,0.1);
+        background: rgba(42, 176, 98, 0.4);
 
         .method {
             background: #49cc90;
@@ -256,7 +287,7 @@ export default {
 
     &.put {
         border-color: #fca130;
-        background: rgba(252,161,48,0.1);
+        background: rgba(254, 131, 26, 0.4);
 
         .method {
             background: #fca130;
@@ -264,22 +295,22 @@ export default {
     }
 
     &.get {
-        border-color: #61affe;
-        background: rgba(97,175,254,0.1);
+        border-color: #4687d8;
+        background: rgba(70, 135, 216, 0.5);
 
         .method {
-            background: #61affe;
+            background: #4687d8;
         }
     }    
 
     &.delete {
         border-color: #f93e3e;
-        background: rgba(249,62,62,0.1);
+        background: rgba(249, 62, 62, 0.4);
 
         .method {
             background: #f93e3e;
         }
-    }
+    }    
 
     .method {
         font-size: 14px;
