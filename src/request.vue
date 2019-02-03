@@ -6,7 +6,7 @@
             <span class="path">{{url}}</span>
             <span class="description">{{description}}</span>   
         </div>
-        <params-table :params="sourceList" v-show="open" />
+        <params-table :params="sourceList" :resource="resource" v-show="open" />
     </div>
 </template>
 
@@ -51,7 +51,14 @@ export default {
         method: {
             type: String,
             default: 'GET'
+        },
+        resource:{
+            type: Object,
+            default: () => { 
+                return { } 
+            }
         }
+
     },
 
     components: {
@@ -60,12 +67,14 @@ export default {
 
     data () {
         return {
+
             open: false,
             spec: this.$parent.spec,
+            scheme:this.$parent.scheme,
             dataHeaders: this.parseHeaders(this.headers),
-            dataBody: this.parseBody(this.body),
+            dataBody: this.parseBody(),
             dataPath: this.parsePath(this.path),
-            dataQuery: this.parseQuery(this.params)
+            dataQuery: this.parseQuery(this.params),
         }
     },
     computed: {
@@ -79,11 +88,15 @@ export default {
         },
 
         sourceList () {
-            return [].concat(this.dataPath, this.dataHeaders, this.dataBody, this.dataQuery)
+
+            let sourceList = [].concat(this.dataPath, this.dataHeaders, this.dataBody, this.dataQuery)
+          
+            return sourceList
         }
 
     },
     methods: {
+
 
         parsePath () {
 
@@ -144,15 +157,22 @@ export default {
          * }
          * 
          */        
-        parseBody (body) {
+        parseBody () {
 
-            if (!body.data) return [] 
 
-            if (typeof body.data === 'string') {
-                body.dataValue = body.data + "" 
-            } else if (typeof body.data === 'object') {
-                body.dataValue = JSON.stringify(body.data, null, 4)
-            } 
+
+           let body =  this.params.filter(param=>{
+                return param.in == "body";
+            })[0];
+
+
+
+            if (!body) return [] 
+
+            body.dataValue = JSON.stringify(body.schema.properties, null, 4);
+
+
+        
 
             return [
                 Object.assign({

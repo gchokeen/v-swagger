@@ -14,7 +14,9 @@
                 <th>Description</th>
             </tr>
             <tr v-for="(item, index) in dataParameters" :key="index">
+                
                 <td class="vtop">
+
                     <div class="parameter-name">{{item.key}}<span class="required" v-if="item.required">* required</span></div>
                     <div class="parameter-type" v-if="item.type">{{item.type}}</div>
                     <div class="source">({{item.source}})</div>
@@ -44,7 +46,7 @@
                     <div class="value-input" v-if="item.contentType">
                         <div class="title">Parameter content type</div>
                         <select v-model="item.contentType">
-                            <option :value="item.contentType">{{item.contentType}}</option>
+                            <option v-for="(contentType, index) in resource.consumes" :key="index" :value="contentType">{{contentType}}</option>
                         </select>
                     </div>                        
 
@@ -84,7 +86,7 @@
 import axios from 'axios'
 
 export default {
-    props: ['params'],
+    props: ['params','resource'],
     data () {
         return {
             execute: false,
@@ -93,6 +95,7 @@ export default {
             dataParameters: this.params || [],
             isCopySuccess: false,
             showCopyResult: false
+
         }
     },
     computed: {
@@ -108,7 +111,7 @@ export default {
             var self = this 
             call.interceptors.response.use((response) => {
                 return response;
-            }, function (error) {
+            },  (error)=> {
                 
                 // Do something with response error
                 if (error.response.status === 401) {
@@ -118,14 +121,18 @@ export default {
                 return Promise.reject(error.response);
             });            
 
-            const url = [this.$parent.spec.host, this.getUrl()].join('');
+            console.log(this.$parent);
+
+
+
+            const url = [this.$parent.scheme,"://",this.$parent.spec.host,this.$parent.spec.basePath, this.getUrl()].join('');
 
             const config = {
                 url,
                 method: this.$parent.method,
                 headers: this.getHeaders(),
                 params: this.getParams(),
-                data: this.getData()
+                data: this.getData(),
             }
 
             try {
@@ -145,14 +152,16 @@ export default {
             this.lastResponseData = null
             this.lastErrorMessage = data
         },
+        
         getData () {
-            let body = {}
 
-            body = this.dataParameters.filter(it => {
+           let  body = this.dataParameters.filter(it => {
                 return it.source.includes('body')
             })[0];
 
+
             if (!body) return {}
+
 
             return JSON.parse(body.dataValue) || {}
         },

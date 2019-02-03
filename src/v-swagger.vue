@@ -10,6 +10,11 @@
 
         <div class="table" v-show="isOpen">
 
+            <label for="scheme">Schemes</label>
+            <select v-model="scheme" id="scheme">
+                <option v-for="(scheme, index) in api.schemes" :key="index" :value="scheme">{{scheme}}</option>
+            </select>
+
             <section v-bind:key="index" v-for="(tag, index) in tags">
                 <h3>{{tag.name}}</h3>
                 <p>{{tag.description}}</p>
@@ -27,6 +32,7 @@
                         :path="item.parameters"
                         :params="item.parameters"
                         :body="item.responses"
+                        :resource="item"
                     />
                 </div>
                 
@@ -52,6 +58,7 @@ export default {
     data () {
 
         return {
+            scheme:'https',
             specInfo: this.spec,
             open: this.spec.opened || true,
             api:'',
@@ -78,13 +85,12 @@ export default {
 
                     let pathKeys = Object.keys(api.paths);
 
-                  if(api.tags.length > 0){
+                  if(api.tags && api.tags.length > 0){
                       this.tags = api.tags;
 
 
                         this.tags.forEach(tag => {
                             
-                               // console.log(tag.name);
                             let obj  = {};
 
                             Object.values(api.paths).map((resource,path)=>{
@@ -102,7 +108,6 @@ export default {
                                     });
                             
                                     if(method.tags.indexOf(tag.name) != -1){
-                                        console.log(pathKeys[path]);
                                         obj[pathKeys[path]] = mObj;
                                         
                                        
@@ -117,13 +122,10 @@ export default {
                         });
 
 
-                    //console.log(this.paths);
-                    
-                    //   api.paths.map((x,key)=>{
-
-                    //       console.log(x,key);
-
-                    //   })
+                   
+                  }
+                  else{
+                      this.paths['default'] = api.paths;
                   }
 
 
