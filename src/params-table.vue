@@ -297,7 +297,7 @@ table {
 }
 
 .loading{
-    text-align: center;
+    text-align: center;  
 }
 
 .section-header {

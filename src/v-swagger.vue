@@ -10,10 +10,24 @@
 
         <div class="table" v-show="isOpen">
 
-            <label for="scheme">Schemes</label>
-            <select v-model="scheme" id="scheme">
-                <option v-for="(scheme, index) in api.schemes" :key="index" :value="scheme">{{scheme}}</option>
-            </select>
+            <section class="header">
+                <div class="left">
+                    <label for="scheme">Schemes</label>
+                    <select class="select" v-model="scheme" id="scheme">
+                        <option v-for="(scheme, index) in api.schemes" :key="index" :value="scheme">{{scheme}}</option>
+                    </select>
+                </div>
+                <div class="right">
+                         <label for="authorization">Authorization</label>
+                        <select class="select" v-model="authorization" id="authorization">
+                            <option value="">Choose</option>
+                            <option v-for="(client, index) in authclients" :key="index" :value="client">{{client.clientName}}</option>
+                        </select>
+                </div>
+            
+
+            </section>
+
 
             <section v-bind:key="index" v-for="(tag, index) in tags">
                 <h3>{{tag.name}}</h3>
@@ -54,11 +68,26 @@ import request from './request.vue'
 var SwaggerParser = require('swagger-parser');
 
 export default {
-    props: [ 'spec' ],
+     props: {
+        spec: {
+            type: Object,
+            default: {}
+        },
+             
+        authclients: { 
+            type: Array,
+            default: () => { 
+                return [] 
+            }
+        }      
+       
+
+    },
     data () {
 
         return {
             scheme:'https',
+            authorization:'',
             specInfo: this.spec,
             open: this.spec.opened || true,
             api:'',
@@ -71,6 +100,8 @@ export default {
         }
     },
     mounted () {
+
+        console.log(this.authclients);
 
         SwaggerParser.validate(this.spec,(err, api)=> {
             if (err) {
@@ -163,13 +194,14 @@ export default {
         font-size: 24px;
         margin: 0 0 5px;
         font-family: sans-serif;
-        color: #3b4151;        
+        color: #3b4151;     
+        flex-wrap: wrap;   
 
 
         .host {
             font-size: 14px;
             font-weight: 400;
-            padding: 0 10px;
+            padding: 0px;
             font-family: sans-serif;
             color: #3b4151;
             flex: 1;                       
@@ -177,13 +209,14 @@ export default {
 
         .title {
             font-weight: 700;
+            margin-right: 15px;
         }
 
         .description {
             font-size: 14px;
             font-weight: 400;
             flex: 1;
-            padding: 0 10px;
+            padding: 0px;
             font-family: sans-serif;
             color: #3b4151;
             text-align: right;             
@@ -191,7 +224,30 @@ export default {
 
     }
 
+    .select{
+        border: 1px solid;
+        background: transparent;
+        padding: 0px 10px;
+
+    }
+
     .table{
+
+        .header{
+            justify-content: space-between;
+            
+            label{
+                font-size: 18px;
+            }
+            
+
+            .left{
+                text-align: left
+            }
+            .right{
+                text-align: right;
+            }
+        }
         h3{
             margin: 15px 0px;
         }
