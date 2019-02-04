@@ -20,7 +20,7 @@
                 <p>{{tag.description}}</p>
 
                 <div v-bind:key="path" v-for="(resources, path) in paths[tag.name]"> 
-                    <h4>{{path}}</h4>
+                    <!-- <h4>{{path}}</h4> -->
                     <slot></slot>
                     <request v-for="(item, method) in resources" 
                     
@@ -81,7 +81,7 @@ export default {
 
                   this.api = api;
 
-                   console.log(api);
+                  // console.log(api);
 
                     let pathKeys = Object.keys(api.paths);
 

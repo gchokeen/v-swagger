@@ -58,7 +58,11 @@
             </table>
             <div class="execute-wrapper" v-show="isExecute">
                 <button class="btn execute" @click="runApi">Execute</button>
-            </div>         
+            </div>  
+
+            <div class="loading"  v-show="loading">
+                loading...
+            </div>       
         </div>
         <div class="section-header" v-if="lastResponseData">
             <div class="tab-header">
@@ -94,7 +98,8 @@ export default {
             lastErrorMessage: null,
             dataParameters: this.params || [],
             isCopySuccess: false,
-            showCopyResult: false
+            showCopyResult: false,
+            loading:false
 
         }
     },
@@ -105,6 +110,8 @@ export default {
     },
     methods: {
         async runApi () {
+
+            this.loading = true;
 
             const call = axios.create()
 
@@ -121,7 +128,6 @@ export default {
                 return Promise.reject(error.response);
             });            
 
-            console.log(this.$parent);
 
 
 
@@ -137,10 +143,13 @@ export default {
 
             try {
                 let response = await call.request(config)
-
+                this.loading = false;
                 this.success(response.data)
             } catch (e) {
-                // this.error(e.message)
+
+               // console.log(e);
+                this.loading = false;
+                 this.error("Something went wrong!");
             }
 
         },
@@ -287,6 +296,10 @@ table {
     font-size: 11px;
 }
 
+.loading{
+    text-align: center;
+}
+
 .section-header {
     padding: 8px 20px;
     min-height: 50px;
@@ -321,7 +334,7 @@ table {
     transition: all .3s;
     border: 2px solid gray;
     border-radius: 4px;
-    background: transparent;
+    // background: transparent;
     box-shadow: 0 1px 2px rgba(0,0,0,.1);
     font-family: sans-serif;
     color: #3b4151;
@@ -331,7 +344,7 @@ table {
         border-color: #ff6060;
         background-color: transparent;
         font-family: sans-serif;
-        color: #ff6060;
+        color: #ff6060 !important;
     }
 
     &.execute {

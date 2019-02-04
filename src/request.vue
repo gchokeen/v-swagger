@@ -167,12 +167,19 @@ export default {
 
 
 
-            if (!body) return [] 
+            if (!body) return [];
 
-            body.dataValue = JSON.stringify(body.schema.properties, null, 4);
-
+            let properties = body.schema.properties;
 
         
+             
+            if (properties.body.type === 'string') {
+                body.dataValue = properties.body.properties + "" 
+            } else if (properties.body.type === 'object') {
+                body.dataValue = JSON.stringify(properties.body.properties, null, 4)
+            } 
+
+
 
             return [
                 Object.assign({
