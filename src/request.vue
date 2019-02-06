@@ -106,15 +106,26 @@ export default {
             });
 
 
-            return paths.map(key => {
+            
+            return paths.map(obj => {
                 
-        
+                // console.log("******");
+                
+
+                let key = obj.name;
+
+                let object = { key : key, value: obj};
+
+
+                //console.log(object);
+
+
                 return Object.assign({
                     source: 'path',
                     required: true,
                     type: 'string',
                     description: ''
-                }, key)
+                }, this.parseItems(obj))
             })
         },
 
@@ -171,13 +182,17 @@ export default {
 
             let properties = body.schema.properties;
 
-        
-             
-            if (properties.body.type === 'string') {
+            if (!properties) return [];
+
+
+            if (properties.body && properties.body.type === 'string') {
                 body.dataValue = properties.body.properties + "" 
-            } else if (properties.body.type === 'object') {
-                body.dataValue = JSON.stringify(properties.body.properties, null, 4)
+            } else if (properties.body && properties.body.type === 'object') {
+                body.dataValue = JSON.stringify(this.parseExample(properties.body.properties), null, 4)
             } 
+            else{
+                body.dataValue = JSON.stringify(this.parseExample(properties), null, 4)
+            }
 
 
 
@@ -190,6 +205,42 @@ export default {
                     description: ''
                 }, body)
             ]
+
+        },
+
+        parseExample(obj){
+
+            let nObj = {};
+            for (var key in obj) {
+                if (obj.hasOwnProperty(key)) {
+
+                    if(obj[key].type == "object"){
+                        nObj[key] = this.parseExample(obj[key]);
+                    }
+                    if(obj[key].type == "array"){
+                        let arr = [];
+                        let items = obj[key].items;
+
+                            if(items.type == "string"){
+                                arr.push(items.example?items.example:items.type);
+                            }
+                            else if(items.type == "object"){
+                                arr.push(this.parseExample(items.properties));
+                            }
+
+                        nObj[key] = arr;
+                    }
+                    else{
+                        nObj[key] =  obj[key].example?obj[key].example:obj[key].type;
+                    }
+                    
+                }
+            }
+
+            
+
+            return nObj;
+
 
         },
 

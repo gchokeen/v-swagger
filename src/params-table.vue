@@ -16,8 +16,7 @@
             <tr v-for="(item, index) in dataParameters" :key="index">
                 
                 <td class="vtop">
-
-                    <div class="parameter-name">{{item.key}}<span class="required" v-if="item.required">* required</span></div>
+                    <div class="parameter-name">{{item.name}}<span class="required" v-if="item.required">* required</span></div>
                     <div class="parameter-type" v-if="item.type">{{item.type}}</div>
                     <div class="source">({{item.source}})</div>
                 </td>

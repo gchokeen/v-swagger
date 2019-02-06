@@ -101,7 +101,7 @@ export default {
     },
     mounted () {
 
-        console.log(this.authclients);
+        //console.log(this.authclients);
 
         SwaggerParser.validate(this.spec,(err, api)=> {
             if (err) {

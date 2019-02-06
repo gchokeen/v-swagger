@@ -3588,7 +3588,7 @@ var ParamsTable = { render: function render() {
                 } } }, [_vm._v("Try it out ")])]) : _vm._e(), _vm._v(" "), _vm.execute ? _c('div', { staticClass: "try-out" }, [_c('button', { staticClass: "btn cancel", on: { "click": function click($event) {
                     _vm.execute = false;
                 } } }, [_vm._v("Cancel")])]) : _vm._e()]), _vm._v(" "), _c('div', { staticClass: "table-container" }, [_c('table', [_vm._m(1), _vm._v(" "), _vm._l(_vm.dataParameters, function (item, index) {
-            return _c('tr', { key: index }, [_c('td', { staticClass: "vtop" }, [_c('div', { staticClass: "parameter-name" }, [_vm._v(_vm._s(item.key)), item.required ? _c('span', { staticClass: "required" }, [_vm._v("* required")]) : _vm._e()]), _vm._v(" "), item.type ? _c('div', { staticClass: "parameter-type" }, [_vm._v(_vm._s(item.type))]) : _vm._e(), _vm._v(" "), _c('div', { staticClass: "source" }, [_vm._v("(" + _vm._s(item.source) + ")")])]), _vm._v(" "), _c('td', { staticClass: "vtop" }, [item.description ? _c('div', { staticClass: "description" }, [_vm._v(_vm._s(item.description))]) : _vm._e(), _vm._v(" "), item.dataValue && !_vm.isExecute ? _c('div', { staticClass: "data" }, [_c('pre', [_vm._v(_vm._s(item.dataValue))])]) : _vm._e(), _vm._v(" "), _vm.isExecute && item.source !== 'body' ? _c('div', { staticClass: "value-input" }, [item.items ? _c('select', { directives: [{ name: "model", rawName: "v-model", value: item.inputValue, expression: "item.inputValue" }], on: { "change": function change($event) {
+            return _c('tr', { key: index }, [_c('td', { staticClass: "vtop" }, [_c('div', { staticClass: "parameter-name" }, [_vm._v(_vm._s(item.name)), item.required ? _c('span', { staticClass: "required" }, [_vm._v("* required")]) : _vm._e()]), _vm._v(" "), item.type ? _c('div', { staticClass: "parameter-type" }, [_vm._v(_vm._s(item.type))]) : _vm._e(), _vm._v(" "), _c('div', { staticClass: "source" }, [_vm._v("(" + _vm._s(item.source) + ")")])]), _vm._v(" "), _c('td', { staticClass: "vtop" }, [item.description ? _c('div', { staticClass: "description" }, [_vm._v(_vm._s(item.description))]) : _vm._e(), _vm._v(" "), item.dataValue && !_vm.isExecute ? _c('div', { staticClass: "data" }, [_c('pre', [_vm._v(_vm._s(item.dataValue))])]) : _vm._e(), _vm._v(" "), _vm.isExecute && item.source !== 'body' ? _c('div', { staticClass: "value-input" }, [item.items ? _c('select', { directives: [{ name: "model", rawName: "v-model", value: item.inputValue, expression: "item.inputValue" }], on: { "change": function change($event) {
                         var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
                             return o.selected;
                         }).map(function (o) {
@@ -3955,19 +3955,28 @@ var request = { render: function render() {
     },
     methods: {
         parsePath: function parsePath() {
+            var _this = this;
 
             var paths = this.params.filter(function (param) {
                 return param.in == "path";
             });
 
-            return paths.map(function (key) {
+            return paths.map(function (obj) {
+
+                // console.log("******");
+
+
+                var key = obj.name;
+
+                //console.log(object);
+
 
                 return Object.assign({
                     source: 'path',
                     required: true,
                     type: 'string',
                     description: ''
-                }, key);
+                }, _this.parseItems(obj));
             });
         },
 
@@ -3983,18 +3992,18 @@ var request = { render: function render() {
          * 
          */
         parseHeaders: function parseHeaders(headers) {
-            var _this = this;
+            var _this2 = this;
 
             return headers.map(function (obj) {
 
-                obj.params = _this.parseHeaderValue(obj.description);
+                obj.params = _this2.parseHeaderValue(obj.description);
 
                 return Object.assign({
                     source: 'header',
                     type: 'string',
                     required: true,
                     description: ''
-                }, _this.parseItems(obj));
+                }, _this2.parseItems(obj));
             });
         },
 
@@ -4024,10 +4033,14 @@ var request = { render: function render() {
 
             var properties = body.schema.properties;
 
-            if (properties.body.type === 'string') {
+            if (!properties) { return []; }
+
+            if (properties.body && properties.body.type === 'string') {
                 body.dataValue = properties.body.properties + "";
-            } else if (properties.body.type === 'object') {
-                body.dataValue = JSON.stringify(properties.body.properties, null, 4);
+            } else if (properties.body && properties.body.type === 'object') {
+                body.dataValue = JSON.stringify(this.parseExample(properties.body.properties), null, 4);
+            } else {
+                body.dataValue = JSON.stringify(this.parseExample(properties), null, 4);
             }
 
             return [Object.assign({
@@ -4037,6 +4050,36 @@ var request = { render: function render() {
                 required: false,
                 description: ''
             }, body)];
+        },
+        parseExample: function parseExample(obj) {
+            var this$1 = this;
+
+
+            var nObj = {};
+            for (var key in obj) {
+                if (obj.hasOwnProperty(key)) {
+
+                    if (obj[key].type == "object") {
+                        nObj[key] = this$1.parseExample(obj[key]);
+                    }
+                    if (obj[key].type == "array") {
+                        var arr = [];
+                        var items = obj[key].items;
+
+                        if (items.type == "string") {
+                            arr.push(items.example ? items.example : items.type);
+                        } else if (items.type == "object") {
+                            arr.push(this$1.parseExample(items.properties));
+                        }
+
+                        nObj[key] = arr;
+                    } else {
+                        nObj[key] = obj[key].example ? obj[key].example : obj[key].type;
+                    }
+                }
+            }
+
+            return nObj;
         },
 
 
@@ -4167,7 +4210,7 @@ var VSwagger = { render: function render() {
     mounted: function mounted() {
         var _this = this;
 
-        console.log(this.authclients);
+        //console.log(this.authclients);
 
         SwaggerParser.validate(this.spec, function (err, api) {
             if (err) {
