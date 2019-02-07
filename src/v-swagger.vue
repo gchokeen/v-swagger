@@ -54,6 +54,32 @@
           
              
         </div>
+        
+        <slot></slot>
+
+        <div class="table definitions">
+            <section class="header">Models</section>
+
+            <section class="models">
+                <div class="model" 
+                    v-bind:key="key" v-for="(model, key) in api.definitions" >
+                    <h3 >{{key}}</h3>
+                    <table>
+                        <tr> 
+                            <th class="vtop">Description</th>
+                            <td>{{model.description}}</td>
+                        </tr>
+                        <tr v-bind:key="key" v-for="(prop, key) in model.properties">
+                            <th class="vtop">Body</th>
+                            <td><pre>{{(prop)}}</pre></td>
+                        </tr>
+                    </table>
+
+                </div>
+            </section>
+            
+
+        </div>
 
         </section>
 
@@ -99,6 +125,43 @@ export default {
             paths:[]
         }
     },
+    methods:{
+        parseExample(obj){
+
+            let nObj = {};
+            for (var key in obj) {
+                if (obj.hasOwnProperty(key)) {
+
+                    if(obj[key].type == "object"){
+                        nObj[key] = this.parseExample(obj[key]);
+                    }
+                    if(obj[key].type == "array"){
+                        let arr = [];
+                        let items = obj[key].items;
+
+                            if(items.type == "string"){
+                                arr.push(items.example?items.example:items.type);
+                            }
+                            else if(items.type == "object"){
+                                arr.push(this.parseExample(items.properties));
+                            }
+
+                        nObj[key] = arr;
+                    }
+                    else{
+                        nObj[key] =  obj[key].example?obj[key].example:obj[key].type;
+                    }
+                    
+                }
+            }
+
+            
+
+            return nObj;
+
+
+        }
+    },
     mounted () {
 
         //console.log(this.authclients);
@@ -112,7 +175,7 @@ export default {
 
                   this.api = api;
 
-                  // console.log(api);
+                   console.log(api);
 
                     let pathKeys = Object.keys(api.paths);
 
@@ -158,10 +221,6 @@ export default {
                   else{
                       this.paths['default'] = api.paths;
                   }
-
-
-
-
                  
 
             }
@@ -170,6 +229,9 @@ export default {
 
     },
     computed: {
+        isOpened (model) {
+            return model.opened  = false;
+        },
         isOpen () {
             return this.open 
         }
@@ -183,6 +245,33 @@ export default {
 <style scoped lang="scss">
 .api  {
     /* background-color: yellow; */
+
+
+    .vtop{
+        vertical-align: top;
+    }
+
+    .definitions{
+        border: 1px solid rgba(59,65,81,.3);
+        margin-top: 70px;
+
+        .header{
+            padding: 10px;
+        }
+
+        .models{
+            padding: 10px;
+
+            .model{
+                border-color: rgba(59, 65, 81, 0.3);
+                background: rgba(0, 0, 0, 0.1);
+                padding: 10px 20px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+            }
+        }
+
+    }
 
     .header {
         display: flex;

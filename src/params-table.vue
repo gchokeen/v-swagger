@@ -1,5 +1,8 @@
 <template>
+    
+
     <div class="parameters">
+        <p class="description">{{resource.description}}</p>
         <div class="section-header">
             <div class="tab-header">
                 <h1>Parameters</h1>
@@ -14,7 +17,6 @@
                 <th>Description</th>
             </tr>
             <tr v-for="(item, index) in dataParameters" :key="index">
-                
                 <td class="vtop">
                     <div class="parameter-name">{{item.name}}<span class="required" v-if="item.required">* required</span></div>
                     <div class="parameter-type" v-if="item.type">{{item.type}}</div>
@@ -260,6 +262,11 @@ export default {
 </script>
 
 <style scoped lang='scss'>
+
+.parameters > .description{
+    padding: 8px 6px;
+    margin-bottom: 8px;
+}
 
 table {
     display: table;
