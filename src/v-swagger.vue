@@ -62,18 +62,9 @@
 
             <section class="models">
                 <div class="model" 
-                    v-bind:key="key" v-for="(model, key) in api.definitions" >
-                    <h3 >{{key}}</h3>
-                    <table>
-                        <tr> 
-                            <th class="vtop">Description</th>
-                            <td>{{model.description}}</td>
-                        </tr>
-                        <tr v-bind:key="key" v-for="(prop, key) in model.properties">
-                            <th class="vtop">Body</th>
-                            <td><pre>{{(prop)}}</pre></td>
-                        </tr>
-                    </table>
+                    v-bind:key="name" v-for="(model, name) in api.definitions" >
+                   
+                    <model :model="model" :name="name" />
 
                 </div>
             </section>
@@ -90,6 +81,8 @@
 <script>
 
 import request from './request.vue'
+import model from './model.vue'
+
 
 var SwaggerParser = require('swagger-parser');
 
@@ -116,6 +109,7 @@ export default {
             authorization:'',
             specInfo: this.spec,
             open: this.spec.opened || true,
+            isCollapsed: false,
             api:'',
             error: undefined,
             tags:[{
@@ -126,6 +120,9 @@ export default {
         }
     },
     methods:{
+        toggleCollapsation(model) {
+            return model.isCollapsed = !model.isCollapsed;
+        },
         parseExample(obj){
 
             let nObj = {};
@@ -237,7 +234,8 @@ export default {
         }
     },
     components: {
-        request
+        request,
+        model
     }
 }
 </script>
@@ -247,31 +245,6 @@ export default {
     /* background-color: yellow; */
 
 
-    .vtop{
-        vertical-align: top;
-    }
-
-    .definitions{
-        border: 1px solid rgba(59,65,81,.3);
-        margin-top: 70px;
-
-        .header{
-            padding: 10px;
-        }
-
-        .models{
-            padding: 10px;
-
-            .model{
-                border-color: rgba(59, 65, 81, 0.3);
-                background: rgba(0, 0, 0, 0.1);
-                padding: 10px 20px;
-                margin-bottom: 10px;
-                border-radius: 5px;
-            }
-        }
-
-    }
 
     .header {
         display: flex;
@@ -345,5 +318,36 @@ export default {
             margin: 10px 0px;
         }
     } 
+
+
+
+    .definitions{
+        border: 1px solid rgba(59,65,81,.3);
+        margin-top: 70px;
+
+
+        .header{
+            padding: 10px;
+        }
+
+
+
+        .models{
+
+                padding: 10px;
+
+
+
+                .model{
+                    border-color: rgba(59, 65, 81, 0.3);
+                    background: rgba(0, 0, 0, 0.1);
+                    padding: 10px 20px;
+                    margin-bottom: 10px;
+                    border-radius: 5px;
+
+                   
+                }
+        }
+    }
 }
 </style>

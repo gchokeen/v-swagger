@@ -4146,7 +4146,39 @@
                 if (typeof document !== 'undefined') {
                     var head = document.head || document.getElementsByTagName('head')[0],
                         style = document.createElement('style'),
-                        css = ".api[data-v-13776bac] { /* background-color: yellow; */ } .api .vtop[data-v-13776bac] { vertical-align: top; } .api .definitions[data-v-13776bac] { border: 1px solid rgba(59, 65, 81, 0.3); margin-top: 70px; } .api .definitions .header[data-v-13776bac] { padding: 10px; } .api .definitions .models[data-v-13776bac] { padding: 10px; } .api .definitions .models .model[data-v-13776bac] { border-color: rgba(59, 65, 81, 0.3); background: rgba(0, 0, 0, 0.1); padding: 10px 20px; margin-bottom: 10px; border-radius: 5px; } .api .header[data-v-13776bac] { display: flex; align-items: center; padding: 10px 20px 10px 0px; cursor: pointer; transition: all .2s; border-bottom: 1px solid rgba(59, 65, 81, 0.3); font-size: 24px; margin: 0 0 5px; font-family: sans-serif; color: #3b4151; flex-wrap: wrap; } .api .header .host[data-v-13776bac] { font-size: 14px; font-weight: 400; padding: 0px; font-family: sans-serif; color: #3b4151; flex: 1; } .api .header .title[data-v-13776bac] { font-weight: 700; margin-right: 15px; } .api .header .description[data-v-13776bac] { font-size: 14px; font-weight: 400; flex: 1; padding: 0px; font-family: sans-serif; color: #3b4151; text-align: right; } .api .select[data-v-13776bac] { border: 1px solid; background: transparent; padding: 0px 10px; } .api .table .header[data-v-13776bac] { justify-content: space-between; } .api .table .header label[data-v-13776bac] { font-size: 18px; } .api .table .header .left[data-v-13776bac] { text-align: left; } .api .table .header .right[data-v-13776bac] { text-align: right; } .api .table h3[data-v-13776bac] { margin: 15px 0px; } .api .table h4[data-v-13776bac] { margin: 10px 0px; } ";style.type = 'text/css';if (style.styleSheet) {
+                        css = "pre[data-v-3ca30ac0] { overflow-x: auto; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; background: #482f2fb0; color: #fff; padding: 10px; width: 100%; } .vtop[data-v-3ca30ac0] { vertical-align: top; } table[data-v-3ca30ac0] { border-collapse: collapse; } td[data-v-3ca30ac0] { padding-bottom: 1em; padding-left: 1em; } h3[data-v-3ca30ac0] { padding: 15px 0px; margin: 0px; cursor: pointer; } ";style.type = 'text/css';if (style.styleSheet) {
+                        style.styleSheet.cssText = css;
+                    } else {
+                        style.appendChild(document.createTextNode(css));
+                    }head.appendChild(style);
+                }
+            })();
+
+            var model = { render: function render() {
+                    var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('div', [_c('h3', { on: { "click": _vm.toggle } }, [_vm._v(_vm._s(_vm.name))]), _vm._v(" "), _c('table', { directives: [{ name: "show", rawName: "v-show", value: _vm.isActive, expression: "isActive" }] }, [_c('tr', [_c('th', { staticClass: "vtop" }, [_vm._v("Description")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.model.description))])]), _vm._v(" "), _vm._l(_vm.model.properties, function (prop, key) {
+                        return _c('tr', { key: key }, [_c('th', { staticClass: "vtop" }, [_vm._v("Body")]), _vm._v(" "), _c('td', [_c('pre', [_vm._v(_vm._s(prop))])])]);
+                    })], 2)]);
+                }, staticRenderFns: [], _scopeId: 'data-v-3ca30ac0',
+                props: ["model", "name"],
+                data: function data() {
+                    return {
+                        isActive: false
+                    };
+                },
+
+                methods: {
+                    toggle: function toggle() {
+                        this.isActive = !this.isActive;
+                    }
+                }
+
+            };
+
+            (function () {
+                if (typeof document !== 'undefined') {
+                    var head = document.head || document.getElementsByTagName('head')[0],
+                        style = document.createElement('style'),
+                        css = ".api[data-v-13776bac] { /* background-color: yellow; */ } .api .header[data-v-13776bac] { display: flex; align-items: center; padding: 10px 20px 10px 0px; cursor: pointer; transition: all .2s; border-bottom: 1px solid rgba(59, 65, 81, 0.3); font-size: 24px; margin: 0 0 5px; font-family: sans-serif; color: #3b4151; flex-wrap: wrap; } .api .header .host[data-v-13776bac] { font-size: 14px; font-weight: 400; padding: 0px; font-family: sans-serif; color: #3b4151; flex: 1; } .api .header .title[data-v-13776bac] { font-weight: 700; margin-right: 15px; } .api .header .description[data-v-13776bac] { font-size: 14px; font-weight: 400; flex: 1; padding: 0px; font-family: sans-serif; color: #3b4151; text-align: right; } .api .select[data-v-13776bac] { border: 1px solid; background: transparent; padding: 0px 10px; } .api .table .header[data-v-13776bac] { justify-content: space-between; } .api .table .header label[data-v-13776bac] { font-size: 18px; } .api .table .header .left[data-v-13776bac] { text-align: left; } .api .table .header .right[data-v-13776bac] { text-align: right; } .api .table h3[data-v-13776bac] { margin: 15px 0px; } .api .table h4[data-v-13776bac] { margin: 10px 0px; } .api .definitions[data-v-13776bac] { border: 1px solid rgba(59, 65, 81, 0.3); margin-top: 70px; } .api .definitions .header[data-v-13776bac] { padding: 10px; } .api .definitions .models[data-v-13776bac] { padding: 10px; } .api .definitions .models .model[data-v-13776bac] { border-color: rgba(59, 65, 81, 0.3); background: rgba(0, 0, 0, 0.1); padding: 10px 20px; margin-bottom: 10px; border-radius: 5px; } ";style.type = 'text/css';if (style.styleSheet) {
                         style.styleSheet.cssText = css;
                     } else {
                         style.appendChild(document.createTextNode(css));
@@ -4181,10 +4213,8 @@
                                 return _c('request', { key: method, attrs: { "method": method, "url": path, "description": item.summary, "headers": item.headers, "path": item.parameters, "params": item.parameters, "body": item.responses, "resource": item } });
                             })], 2);
                         })], 2);
-                    })], 2), _vm._v(" "), _vm._t("default"), _vm._v(" "), _c('div', { staticClass: "table definitions" }, [_c('section', { staticClass: "header" }, [_vm._v("Models")]), _vm._v(" "), _c('section', { staticClass: "models" }, _vm._l(_vm.api.definitions, function (model, key) {
-                        return _c('div', { key: key, staticClass: "model" }, [_c('h3', [_vm._v(_vm._s(key))]), _vm._v(" "), _c('table', [_c('tr', [_c('th', { staticClass: "vtop" }, [_vm._v("Description")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(model.description))])]), _vm._v(" "), _vm._l(model.properties, function (prop, key) {
-                            return _c('tr', { key: key }, [_c('th', { staticClass: "vtop" }, [_vm._v("Body")]), _vm._v(" "), _c('td', [_c('pre', [_vm._v(_vm._s(prop))])])]);
-                        })], 2)]);
+                    })], 2), _vm._v(" "), _vm._t("default"), _vm._v(" "), _c('div', { staticClass: "table definitions" }, [_c('section', { staticClass: "header" }, [_vm._v("Models")]), _vm._v(" "), _c('section', { staticClass: "models" }, _vm._l(_vm.api.definitions, function (model$$1, name) {
+                        return _c('div', { key: name, staticClass: "model" }, [_c('model', { attrs: { "model": model$$1, "name": name } })], 1);
                     }))])], 2) : _vm._e()]);
                 }, staticRenderFns: [], _scopeId: 'data-v-13776bac',
                 props: {
@@ -4208,6 +4238,7 @@
                         authorization: '',
                         specInfo: this.spec,
                         open: this.spec.opened || true,
+                        isCollapsed: false,
                         api: '',
                         error: undefined,
                         tags: [{
@@ -4219,6 +4250,9 @@
                 },
 
                 methods: {
+                    toggleCollapsation: function toggleCollapsation(model$$1) {
+                        return model$$1.isCollapsed = !model$$1.isCollapsed;
+                    },
                     parseExample: function parseExample(obj) {
                         var this$1 = this;
 
@@ -4301,15 +4335,16 @@
                 },
 
                 computed: {
-                    isOpened: function isOpened(model) {
-                        return model.opened = false;
+                    isOpened: function isOpened(model$$1) {
+                        return model$$1.opened = false;
                     },
                     isOpen: function isOpen() {
                         return this.open;
                     }
                 },
                 components: {
-                    request: request
+                    request: request,
+                    model: model
                 }
             };
 
