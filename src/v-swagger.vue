@@ -26,6 +26,8 @@
                 </div>
             
 
+                        <authentication v-if="authorization" :client="authorization" :isOpen="true"></authentication>
+
             </section>
 
 
@@ -75,6 +77,7 @@
         </section>
 
 
+       
     </div>
 </template>
 
@@ -82,6 +85,8 @@
 
 import request from './request.vue'
 import model from './model.vue'
+import authentication from './authentication.vue'
+
 
 
 var SwaggerParser = require('swagger-parser');
@@ -105,6 +110,7 @@ export default {
     data () {
 
         return {
+            accessToken:'',
             scheme:'https',
             authorization:'',
             specInfo: this.spec,
@@ -235,7 +241,8 @@ export default {
     },
     components: {
         request,
-        model
+        model,
+        authentication
     }
 }
 </script>

@@ -53,10 +53,14 @@
 
                 </td>
             </tr>
+           
             <tr v-if="params.length === 0">
                 <td colspan="2" class="no-items">No Parameters.</td>
             </tr>
             </table>
+
+
+
             <div class="execute-wrapper" v-show="isExecute">
                 <button class="btn execute" @click="runApi">Execute</button>
             </div>  
@@ -65,15 +69,8 @@
                 loading...
             </div>       
         </div>
-        <div class="section-header" v-if="lastResponseData">
-            <div class="tab-header">
-                <h1>Response</h1>
-            </div>
-            <div class="try-out">
-                <div v-show="showCopyResult" :class="{'copy-result': true, success: isCopySuccess}">Successfully copied</div>
-                <button class="btn" @click="copyToClipboard">Copy</button>
-            </div>
-        </div>
+
+
         <div v-if="lastResponseData">
             <div class="response">
                 <pre id="responseData">{{JSON.stringify(lastResponseData, null, 4)}}</pre>
@@ -83,12 +80,61 @@
             <div class="response error">
                 <pre>{{JSON.stringify(lastErrorMessage, null, 4)}}</pre>
             </div>
-        </div>        
+        </div>   
+        <div class="section-header" v-if="lastResponseData">
+            <div class="tab-header">
+                <h1>Response</h1>
+            </div>
+            <div class="try-out">
+                <div v-show="showCopyResult" :class="{'copy-result': true, success: isCopySuccess}">Successfully copied</div>
+                <button class="btn" @click="copyToClipboard">Copy</button>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <div class="tab-header">
+                <h1>Responses</h1>
+            </div>
+
+        </div>
+
+        <div class="table-container">
+
+            <table class="response-table">
+               
+                 <tr>
+                    <th>Code</th>
+                    <th>Description</th>
+                </tr>
+                <tr v-for="(response, code) in resource.responses" :key="code">
+
+                    <td class="vtop">{{code}}</td>
+                    <td>
+                        
+                        <div class="desc" >{{response.description}}</div>
+
+                        <div v-if="parseResponse(response)">
+                            <span>Example value</span>
+                            <pre>{{parseResponse(response)}}</pre>
+                        </div>
+                        
+                    </td>
+
+                </tr>
+
+                
+            </table>
+        </div>
+        
+
     </div>
 </template>
 
 <script>
 import axios from 'axios'
+
+import store from './store';
+
 
 export default {
     props: ['params','resource'],
@@ -100,7 +146,8 @@ export default {
             dataParameters: this.params || [],
             isCopySuccess: false,
             showCopyResult: false,
-            loading:false
+            loading:false,
+            accessToken:null
 
         }
     },
@@ -109,25 +156,37 @@ export default {
             return this.execute
         }
     },
+    mounted(){
+         this.$root.$on('accessToken', data => {
+           // console.log(data);
+            this.accessToken = data.access_token;
+        });
+    },
     methods: {
         async runApi () {
+
 
             this.loading = true;
 
             const call = axios.create()
 
             var self = this 
-            call.interceptors.response.use((response) => {
-                return response;
-            },  (error)=> {
+            // call.interceptors.response.use((response) => {
+            //     return response;
+            // },  (error)=> {
+
+            //     console.log(error);
                 
-                // Do something with response error
-                if (error.response.status === 401) {
-                }
+            //     // Do something with response error
+            //     // if (error.response.status === 401) {
+            //     // }
 
 
-                return Promise.reject(error.response);
-            });            
+            //     return Promise.reject(error.response);
+            // });            
+
+
+            axios.defaults.headers.common['Authorization'] = this.accessToken;
 
 
 
@@ -140,6 +199,10 @@ export default {
                 headers: this.getHeaders(),
                 params: this.getParams(),
                 data: this.getData(),
+                 headers: {
+                    'accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
             }
 
             try {
@@ -148,7 +211,7 @@ export default {
                 this.success(response.data)
             } catch (e) {
 
-               // console.log(e);
+                console.log(e);
                 this.loading = false;
                  this.error("Something went wrong!");
             }
@@ -230,6 +293,27 @@ export default {
 
             return arr.join(' - ')
         },
+        parseResponse(response){
+            var data = "";
+
+           // console.log(response);
+
+            if(response.schema && response.schema.properties ){
+
+                if(response.schema.properties.body){
+                    data = response.schema.properties.body.properties;
+                }
+                else{
+                    data = response.schema;
+                }
+                
+                return JSON.stringify(data, null, 4);
+            }
+           
+
+            return data;
+            
+        },
         async copyToClipboard (event) {
           try {
                 let textData = JSON.stringify(this.lastResponseData, null, 4)
@@ -267,6 +351,35 @@ export default {
     padding: 8px 6px;
     margin-bottom: 8px;
 }
+
+
+    .response-table .desc {
+        background: #482f2fb0;
+            color: #fff;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+    }
+
+    pre {
+        overflow-x: auto;
+        white-space: pre-wrap;
+        white-space: -moz-pre-wrap;
+        white-space: -pre-wrap;
+        white-space: -o-pre-wrap;
+        word-wrap: break-word;
+        background: #482f2fb0;
+        color: #fff;
+        padding: 10px;
+        width: 100%;
+        border-radius: 5px;
+    }
+
+
+    .vtop{
+        vertical-align: top;
+    }
+
 
 table {
     display: table;

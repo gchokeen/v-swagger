@@ -777,37 +777,6 @@ if (hadRuntime) {
 
 var regenerator = runtimeModule;
 
-// 7.1.4 ToInteger
-var ceil = Math.ceil;
-var floor = Math.floor;
-var _toInteger = function (it) {
-  return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
-};
-
-// 7.2.1 RequireObjectCoercible(argument)
-var _defined = function (it) {
-  if (it == undefined) throw TypeError("Can't call method on  " + it);
-  return it;
-};
-
-// true  -> String#at
-// false -> String#codePointAt
-var _stringAt = function (TO_STRING) {
-  return function (that, pos) {
-    var s = String(_defined(that));
-    var i = _toInteger(pos);
-    var l = s.length;
-    var a, b;
-    if (i < 0 || i >= l) return TO_STRING ? '' : undefined;
-    a = s.charCodeAt(i);
-    return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff
-      ? TO_STRING ? s.charAt(i) : a
-      : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
-  };
-};
-
-var _library = true;
-
 var _global = createCommonjsModule(function (module) {
 // https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
 var global = module.exports = typeof window != 'undefined' && window.Math == Math
@@ -991,6 +960,79 @@ $export.W = 32;  // wrap
 $export.U = 64;  // safe
 $export.R = 128; // real proto method for `library`
 var _export = $export;
+
+// 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
+_export(_export.S + _export.F * !_descriptors, 'Object', { defineProperty: _objectDp.f });
+
+var $Object = _core.Object;
+var defineProperty = function defineProperty(it, key, desc) {
+  return $Object.defineProperty(it, key, desc);
+};
+
+var defineProperty$1 = createCommonjsModule(function (module) {
+module.exports = { "default": defineProperty, __esModule: true };
+});
+
+unwrapExports(defineProperty$1);
+
+var defineProperty$3 = createCommonjsModule(function (module, exports) {
+
+exports.__esModule = true;
+
+
+
+var _defineProperty2 = _interopRequireDefault(defineProperty$1);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (obj, key, value) {
+  if (key in obj) {
+    (0, _defineProperty2.default)(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+};
+});
+
+var _defineProperty = unwrapExports(defineProperty$3);
+
+// 7.1.4 ToInteger
+var ceil = Math.ceil;
+var floor = Math.floor;
+var _toInteger = function (it) {
+  return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
+};
+
+// 7.2.1 RequireObjectCoercible(argument)
+var _defined = function (it) {
+  if (it == undefined) throw TypeError("Can't call method on  " + it);
+  return it;
+};
+
+// true  -> String#at
+// false -> String#codePointAt
+var _stringAt = function (TO_STRING) {
+  return function (that, pos) {
+    var s = String(_defined(that));
+    var i = _toInteger(pos);
+    var l = s.length;
+    var a, b;
+    if (i < 0 || i >= l) return TO_STRING ? '' : undefined;
+    a = s.charCodeAt(i);
+    return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff
+      ? TO_STRING ? s.charAt(i) : a
+      : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
+  };
+};
+
+var _library = true;
 
 var _redefine = _hide;
 
@@ -3574,7 +3616,7 @@ var axios$1 = axios_1;
     if (typeof document !== 'undefined') {
         var head = document.head || document.getElementsByTagName('head')[0],
             style = document.createElement('style'),
-            css = ".parameters > .description[data-v-602a81a0] { padding: 8px 6px; margin-bottom: 8px; } table[data-v-602a81a0] { display: table; border: 0px; margin: 0px; border-collapse: collapse; width: 100%; padding: 0 10px; } table tr[data-v-602a81a0], table td[data-v-602a81a0], table th[data-v-602a81a0] { border: 0px; background-color: transparent; padding: 0.6em 0em; } table th[data-v-602a81a0] { font-size: 12px; font-weight: 700; padding: 12px 0; text-align: left; border-bottom: 1px solid rgba(59, 65, 81, 0.2); font-family: sans-serif; color: #3b4151; } table .no-items[data-v-602a81a0] { font-size: 12px; } .source[data-v-602a81a0] { color: gray; font-size: 11px; } .loading[data-v-602a81a0] { text-align: center; } .section-header[data-v-602a81a0] { padding: 8px 20px; min-height: 50px; background: rgba(255, 255, 255, 0.8); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); display: flex; align-items: center; box-sizing: border-box; } .section-header .tab-header[data-v-602a81a0] { display: flex; flex: 1; } .section-header .tab-header h1[data-v-602a81a0] { font-size: 14px; flex: 1; margin: 0; font-family: sans-serif; color: #3b4151; } .table-container[data-v-602a81a0] { padding: 20px; } .btn[data-v-602a81a0] { font-size: 14px; font-weight: 700; padding: 5px 23px; transition: all .3s; border: 2px solid gray; border-radius: 4px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); font-family: sans-serif; color: #3b4151; cursor: pointer; } .btn.cancel[data-v-602a81a0] { border-color: #ff6060; background-color: transparent; font-family: sans-serif; color: #ff6060 !important; } .btn.execute[data-v-602a81a0] { background-color: #4990e2; color: #fff; border-color: #4990e2; } .execute-wrapper .btn[data-v-602a81a0] { width: 100%; padding: 8px 40px; } .parameter-name[data-v-602a81a0] { font-size: 16px; font-weight: 700; font-family: sans-serif; color: #3b4151; vertical-align: middle; } .parameter-name .required[data-v-602a81a0] { font-size: 10px; padding: 5px; vertical-align: middle; color: rgba(255, 0, 0, 0.6); } .parameter-type[data-v-602a81a0] { font-size: 12px; padding: 5px 0; font-family: monospace; font-weight: 600; color: #3b4151; } .data[data-v-602a81a0] { font-size: 12px; } .vtop[data-v-602a81a0] { vertical-align: top; } .value-input[data-v-602a81a0] { margin-top: 2px; } .value-input input[type=text][data-v-602a81a0] { padding: 8px 10px; border-radius: 4px; border: 1px solid #ececec; width: 240px; } .value-input textarea[data-v-602a81a0] { padding: 8px 10px; border-radius: 4px; border: 1px solid #ececec; width: 90%; height: 110px; max-width: 100%; } .value-input .title[data-v-602a81a0] { font-size: 12px; font-weight: 700; margin-bottom: 5px; } .value-input select[data-v-602a81a0] { font-size: 14px; font-weight: 700; padding: 5px 40px 5px 10px; height: 34px; width: 180px; box-sizing: border-box; border: 2px solid #41444e; border-radius: 4px; background: #f7f7f7 url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAyMCI+ICAgIDxwYXRoIGQ9Ik0xMy40MTggNy44NTljLjI3MS0uMjY4LjcwOS0uMjY4Ljk3OCAwIC4yNy4yNjguMjcyLjcwMSAwIC45NjlsLTMuOTA4IDMuODNjLS4yNy4yNjgtLjcwNy4yNjgtLjk3OSAwbC0zLjkwOC0zLjgzYy0uMjctLjI2Ny0uMjctLjcwMSAwLS45NjkuMjcxLS4yNjguNzA5LS4yNjguOTc4IDBMMTAgMTFsMy40MTgtMy4xNDF6Ii8+PC9zdmc+\") right 10px center no-repeat; background-size: 20px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.25); font-family: Titillium Web,sans-serif; color: #3b4151; appearance: none; -webkit-appearance: none; -moz-appearance: none; } .params[data-v-602a81a0] { margin-top: 5px; } .params .param-item span[data-v-602a81a0] { font-size: 12px; margin-right: 10px; font-weight: 700; } .copy-result[data-v-602a81a0] { display: inline-block; margin-right: 15px; } .copy-result.success[data-v-602a81a0] { color: #4990e2; } .response[data-v-602a81a0] { font-size: 12px; height: 200px; overflow: auto; margin-bottom: 10px; } .response pre[data-v-602a81a0] { padding: 10px; background-color: transparent; } .response.error[data-v-602a81a0] { background-color: rgba(255, 0, 0, 0.3); margin: 0px 20px; margin-bottom: 20px; border-radius: 3px; box-sizing: border-box; } ";style.type = 'text/css';if (style.styleSheet) {
+            css = ".parameters > .description[data-v-602a81a0] { padding: 8px 6px; margin-bottom: 8px; } .response-table .desc[data-v-602a81a0] { background: #482f2fb0; color: #fff; padding: 10px; width: 100%; border-radius: 5px; } pre[data-v-602a81a0] { overflow-x: auto; white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; background: #482f2fb0; color: #fff; padding: 10px; width: 100%; border-radius: 5px; } .vtop[data-v-602a81a0] { vertical-align: top; } table[data-v-602a81a0] { display: table; border: 0px; margin: 0px; border-collapse: collapse; width: 100%; padding: 0 10px; } table tr[data-v-602a81a0], table td[data-v-602a81a0], table th[data-v-602a81a0] { border: 0px; background-color: transparent; padding: 0.6em 0em; } table th[data-v-602a81a0] { font-size: 12px; font-weight: 700; padding: 12px 0; text-align: left; border-bottom: 1px solid rgba(59, 65, 81, 0.2); font-family: sans-serif; color: #3b4151; } table .no-items[data-v-602a81a0] { font-size: 12px; } .source[data-v-602a81a0] { color: gray; font-size: 11px; } .loading[data-v-602a81a0] { text-align: center; } .section-header[data-v-602a81a0] { padding: 8px 20px; min-height: 50px; background: rgba(255, 255, 255, 0.8); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); display: flex; align-items: center; box-sizing: border-box; } .section-header .tab-header[data-v-602a81a0] { display: flex; flex: 1; } .section-header .tab-header h1[data-v-602a81a0] { font-size: 14px; flex: 1; margin: 0; font-family: sans-serif; color: #3b4151; } .table-container[data-v-602a81a0] { padding: 20px; } .btn[data-v-602a81a0] { font-size: 14px; font-weight: 700; padding: 5px 23px; transition: all .3s; border: 2px solid gray; border-radius: 4px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); font-family: sans-serif; color: #3b4151; cursor: pointer; } .btn.cancel[data-v-602a81a0] { border-color: #ff6060; background-color: transparent; font-family: sans-serif; color: #ff6060 !important; } .btn.execute[data-v-602a81a0] { background-color: #4990e2; color: #fff; border-color: #4990e2; } .execute-wrapper .btn[data-v-602a81a0] { width: 100%; padding: 8px 40px; } .parameter-name[data-v-602a81a0] { font-size: 16px; font-weight: 700; font-family: sans-serif; color: #3b4151; vertical-align: middle; } .parameter-name .required[data-v-602a81a0] { font-size: 10px; padding: 5px; vertical-align: middle; color: rgba(255, 0, 0, 0.6); } .parameter-type[data-v-602a81a0] { font-size: 12px; padding: 5px 0; font-family: monospace; font-weight: 600; color: #3b4151; } .data[data-v-602a81a0] { font-size: 12px; } .vtop[data-v-602a81a0] { vertical-align: top; } .value-input[data-v-602a81a0] { margin-top: 2px; } .value-input input[type=text][data-v-602a81a0] { padding: 8px 10px; border-radius: 4px; border: 1px solid #ececec; width: 240px; } .value-input textarea[data-v-602a81a0] { padding: 8px 10px; border-radius: 4px; border: 1px solid #ececec; width: 90%; height: 110px; max-width: 100%; } .value-input .title[data-v-602a81a0] { font-size: 12px; font-weight: 700; margin-bottom: 5px; } .value-input select[data-v-602a81a0] { font-size: 14px; font-weight: 700; padding: 5px 40px 5px 10px; height: 34px; width: 180px; box-sizing: border-box; border: 2px solid #41444e; border-radius: 4px; background: #f7f7f7 url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAyMCI+ICAgIDxwYXRoIGQ9Ik0xMy40MTggNy44NTljLjI3MS0uMjY4LjcwOS0uMjY4Ljk3OCAwIC4yNy4yNjguMjcyLjcwMSAwIC45NjlsLTMuOTA4IDMuODNjLS4yNy4yNjgtLjcwNy4yNjgtLjk3OSAwbC0zLjkwOC0zLjgzYy0uMjctLjI2Ny0uMjctLjcwMSAwLS45NjkuMjcxLS4yNjguNzA5LS4yNjguOTc4IDBMMTAgMTFsMy40MTgtMy4xNDF6Ii8+PC9zdmc+\") right 10px center no-repeat; background-size: 20px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.25); font-family: Titillium Web,sans-serif; color: #3b4151; appearance: none; -webkit-appearance: none; -moz-appearance: none; } .params[data-v-602a81a0] { margin-top: 5px; } .params .param-item span[data-v-602a81a0] { font-size: 12px; margin-right: 10px; font-weight: 700; } .copy-result[data-v-602a81a0] { display: inline-block; margin-right: 15px; } .copy-result.success[data-v-602a81a0] { color: #4990e2; } .response[data-v-602a81a0] { font-size: 12px; height: 200px; overflow: auto; margin-bottom: 10px; } .response pre[data-v-602a81a0] { padding: 10px; background-color: transparent; } .response.error[data-v-602a81a0] { background-color: rgba(255, 0, 0, 0.3); margin: 0px 20px; margin-bottom: 20px; border-radius: 3px; box-sizing: border-box; } ";style.type = 'text/css';if (style.styleSheet) {
             style.styleSheet.cssText = css;
         } else {
             style.appendChild(document.createTextNode(css));
@@ -3619,13 +3661,19 @@ var ParamsTable = { render: function render() {
                     } } }, _vm._l(_vm.resource.consumes, function (contentType, index) {
                 return _c('option', { key: index, domProps: { "value": contentType } }, [_vm._v(_vm._s(contentType))]);
             }))]) : _vm._e()])]);
-        }), _vm._v(" "), _vm.params.length === 0 ? _c('tr', [_c('td', { staticClass: "no-items", attrs: { "colspan": "2" } }, [_vm._v("No Parameters.")])]) : _vm._e()], 2), _vm._v(" "), _c('div', { directives: [{ name: "show", rawName: "v-show", value: _vm.isExecute, expression: "isExecute" }], staticClass: "execute-wrapper" }, [_c('button', { staticClass: "btn execute", on: { "click": _vm.runApi } }, [_vm._v("Execute")])]), _vm._v(" "), _c('div', { directives: [{ name: "show", rawName: "v-show", value: _vm.loading, expression: "loading" }], staticClass: "loading" }, [_vm._v(" loading... ")])]), _vm._v(" "), _vm.lastResponseData ? _c('div', { staticClass: "section-header" }, [_vm._m(2), _vm._v(" "), _c('div', { staticClass: "try-out" }, [_c('div', { directives: [{ name: "show", rawName: "v-show", value: _vm.showCopyResult, expression: "showCopyResult" }], class: { 'copy-result': true, success: _vm.isCopySuccess } }, [_vm._v("Successfully copied")]), _vm._v(" "), _c('button', { staticClass: "btn", on: { "click": _vm.copyToClipboard } }, [_vm._v("Copy")])])]) : _vm._e(), _vm._v(" "), _vm.lastResponseData ? _c('div', [_c('div', { staticClass: "response" }, [_c('pre', { attrs: { "id": "responseData" } }, [_vm._v(_vm._s(JSON.stringify(_vm.lastResponseData, null, 4)))])])]) : _vm._e(), _vm._v(" "), _vm.lastErrorMessage ? _c('div', [_c('div', { staticClass: "response error" }, [_c('pre', [_vm._v(_vm._s(JSON.stringify(_vm.lastErrorMessage, null, 4)))])])]) : _vm._e()]);
+        }), _vm._v(" "), _vm.params.length === 0 ? _c('tr', [_c('td', { staticClass: "no-items", attrs: { "colspan": "2" } }, [_vm._v("No Parameters.")])]) : _vm._e()], 2), _vm._v(" "), _c('div', { directives: [{ name: "show", rawName: "v-show", value: _vm.isExecute, expression: "isExecute" }], staticClass: "execute-wrapper" }, [_c('button', { staticClass: "btn execute", on: { "click": _vm.runApi } }, [_vm._v("Execute")])]), _vm._v(" "), _c('div', { directives: [{ name: "show", rawName: "v-show", value: _vm.loading, expression: "loading" }], staticClass: "loading" }, [_vm._v(" loading... ")])]), _vm._v(" "), _vm.lastResponseData ? _c('div', [_c('div', { staticClass: "response" }, [_c('pre', { attrs: { "id": "responseData" } }, [_vm._v(_vm._s(JSON.stringify(_vm.lastResponseData, null, 4)))])])]) : _vm._e(), _vm._v(" "), _vm.lastErrorMessage ? _c('div', [_c('div', { staticClass: "response error" }, [_c('pre', [_vm._v(_vm._s(JSON.stringify(_vm.lastErrorMessage, null, 4)))])])]) : _vm._e(), _vm._v(" "), _vm.lastResponseData ? _c('div', { staticClass: "section-header" }, [_vm._m(2), _vm._v(" "), _c('div', { staticClass: "try-out" }, [_c('div', { directives: [{ name: "show", rawName: "v-show", value: _vm.showCopyResult, expression: "showCopyResult" }], class: { 'copy-result': true, success: _vm.isCopySuccess } }, [_vm._v("Successfully copied")]), _vm._v(" "), _c('button', { staticClass: "btn", on: { "click": _vm.copyToClipboard } }, [_vm._v("Copy")])])]) : _vm._e(), _vm._v(" "), _vm._m(3), _vm._v(" "), _c('div', { staticClass: "table-container" }, [_c('table', { staticClass: "response-table" }, [_vm._m(4), _vm._v(" "), _vm._l(_vm.resource.responses, function (response, code) {
+            return _c('tr', { key: code }, [_c('td', { staticClass: "vtop" }, [_vm._v(_vm._s(code))]), _vm._v(" "), _c('td', [_c('div', { staticClass: "desc" }, [_vm._v(_vm._s(response.description))]), _vm._v(" "), _vm.parseResponse(response) ? _c('div', [_c('span', [_vm._v("Example value")]), _vm._v(" "), _c('pre', [_vm._v(_vm._s(_vm.parseResponse(response)))])]) : _vm._e()])]);
+        })], 2)])]);
     }, staticRenderFns: [function () {
         var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('div', { staticClass: "tab-header" }, [_c('h1', [_vm._v("Parameters")])]);
     }, function () {
         var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('tr', [_c('th', [_vm._v("Name")]), _vm._v(" "), _c('th', [_vm._v("Description")])]);
     }, function () {
         var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('div', { staticClass: "tab-header" }, [_c('h1', [_vm._v("Response")])]);
+    }, function () {
+        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('div', { staticClass: "section-header" }, [_c('div', { staticClass: "tab-header" }, [_c('h1', [_vm._v("Responses")])])]);
+    }, function () {
+        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('tr', [_c('th', [_vm._v("Code")]), _vm._v(" "), _c('th', [_vm._v("Description")])]);
     }], _scopeId: 'data-v-602a81a0',
     props: ['params', 'resource'],
     data: function data() {
@@ -3636,7 +3684,8 @@ var ParamsTable = { render: function render() {
             dataParameters: this.params || [],
             isCopySuccess: false,
             showCopyResult: false,
-            loading: false
+            loading: false,
+            accessToken: null
 
         };
     },
@@ -3646,6 +3695,15 @@ var ParamsTable = { render: function render() {
             return this.execute;
         }
     },
+    mounted: function mounted() {
+        var _this = this;
+
+        this.$root.$on('accessToken', function (data) {
+            // console.log(data);
+            _this.accessToken = data.access_token;
+        });
+    },
+
     methods: {
         runApi: function () {
             var _ref = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee() {
@@ -3660,25 +3718,34 @@ var ParamsTable = { render: function render() {
                                 this$1.loading = true;
 
                                 call = axios$1.create();
+                                // call.interceptors.response.use((response) => {
+                                //     return response;
+                                // },  (error)=> {
 
-                                call.interceptors.response.use(function (response) {
-                                    return response;
-                                }, function (error) {
+                                //     console.log(error);
 
-                                    // Do something with response error
-                                    if (error.response.status === 401) {}
+                                //     // Do something with response error
+                                //     // if (error.response.status === 401) {
+                                //     // }
 
-                                    return Promise.reject(error.response);
-                                });
+
+                                //     return Promise.reject(error.response);
+                                // });            
+
+
+                                axios$1.defaults.headers.common['Authorization'] = this$1.accessToken;
 
                                 url = [this$1.$parent.scheme, "://", this$1.$parent.spec.host, this$1.$parent.spec.basePath, this$1.getUrl()].join('');
-                                config = {
+                                config = _defineProperty({
                                     url: url,
                                     method: this$1.$parent.method,
                                     headers: this$1.getHeaders(),
                                     params: this$1.getParams(),
                                     data: this$1.getData()
-                                };
+                                }, 'headers', {
+                                    'accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                });
                                 _context.prev = 6;
                                 _context.next = 9;
                                 return call.request(config);
@@ -3688,7 +3755,7 @@ var ParamsTable = { render: function render() {
 
                                 this$1.loading = false;
                                 this$1.success(response.data);
-                                _context.next = 18;
+                                _context.next = 19;
                                 break;
 
                             case 14:
@@ -3696,11 +3763,11 @@ var ParamsTable = { render: function render() {
                                 _context.t0 = _context['catch'](6);
 
 
-                                // console.log(e);
+                                console.log(_context.t0);
                                 this$1.loading = false;
                                 this$1.error("Something went wrong!");
 
-                            case 18:
+                            case 19:
                             case 'end':
                                 return _context.stop();
                         }
@@ -3756,14 +3823,14 @@ var ParamsTable = { render: function render() {
             return url;
         },
         getHeaders: function getHeaders() {
-            var _this = this;
+            var _this2 = this;
 
             var headers = {};
 
             this.dataParameters.filter(function (it) {
                 return it.source.includes('header');
             }).forEach(function (it) {
-                headers[it.key] = _this.getHeadersByVariable(it);
+                headers[it.key] = _this2.getHeadersByVariable(it);
             });
 
             return headers;
@@ -3788,9 +3855,27 @@ var ParamsTable = { render: function render() {
 
             return arr.join(' - ');
         },
+        parseResponse: function parseResponse(response) {
+            var data = "";
+
+            // console.log(response);
+
+            if (response.schema && response.schema.properties) {
+
+                if (response.schema.properties.body) {
+                    data = response.schema.properties.body.properties;
+                } else {
+                    data = response.schema;
+                }
+
+                return JSON.stringify(data, null, 4);
+            }
+
+            return data;
+        },
         copyToClipboard: function () {
             var _ref2 = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee2(event) {
-                var _this2 = this;
+                var _this3 = this;
 
                 var textData, el;
                 return regenerator.wrap(function _callee2$(_context2) {
@@ -3831,7 +3916,7 @@ var ParamsTable = { render: function render() {
                                 this$1.isCopySuccess = true;
                                 this$1.showCopyResult = true;
                                 setTimeout(function () {
-                                    return _this2.showCopyResult = false;
+                                    return _this3.showCopyResult = false;
                                 }, 1000);
                                 _context2.next = 20;
                                 break;
@@ -4172,6 +4257,161 @@ var model = { render: function render() {
     if (typeof document !== 'undefined') {
         var head = document.head || document.getElementsByTagName('head')[0],
             style = document.createElement('style'),
+            css = ".modal[data-v-4aa7aade] { display: none; /* Hidden by default */ position: fixed; /* Stay in place */ z-index: 1; /* Sit on top */ left: 0; top: 0; width: 100%; /* Full width */ height: 100%; /* Full height */ overflow: auto; /* Enable scroll if needed */ background-color: black; /* Fallback color */ background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */ } .modal.open[data-v-4aa7aade] { display: block; } .modal-header[data-v-4aa7aade] { border-bottom: 1px solid #888; margin-bottom: 15px; } .modal-header h3[data-v-4aa7aade] { font-size: 22px; padding-bottom: 10px; } /* Modal Content/Box */ .modal-content[data-v-4aa7aade] { background-color: #fefefe; margin: 15% auto; /* 15% from the top and centered */ padding: 30px; border: 1px solid #888; width: 80%; /* Could be more or less, depending on screen size */ position: relative; } /* The Close Button */ .close[data-v-4aa7aade] { color: #aaa; position: absolute; right: 25px; top: 10px; font-size: 28px; font-weight: bold; } .close[data-v-4aa7aade]:hover, .close[data-v-4aa7aade]:focus { color: black; text-decoration: none; cursor: pointer; } form .form-group[data-v-4aa7aade] { margin-bottom: 20px; display: flex; } form .form-group label[data-v-4aa7aade] { display: inline-block; font-size: 12px; flex-grow: 1; flex-basis: 0; font-weight: 800; } form .form-group input[data-v-4aa7aade] { padding: 10px; flex-grow: 4; } form .form-group button.submit[data-v-4aa7aade] { padding: 10px 20px; background: transparent; border: 1px solid #000; font-size: 14px; } form .error[data-v-4aa7aade] { color: #ff0000c7; font-size: 16px; } ";style.type = 'text/css';if (style.styleSheet) {
+            style.styleSheet.cssText = css;
+        } else {
+            style.appendChild(document.createTextNode(css));
+        }head.appendChild(style);
+    }
+})();
+
+var authentication = { render: function render() {
+        var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('div', { staticClass: "modal", class: { open: _vm.isOpen }, attrs: { "id": "authModal" } }, [_c('div', { staticClass: "modal-content" }, [_c('div', { staticClass: "modal-header" }, [_c('h3', [_vm._v("GET NEW ACCESS TOKEN")]), _vm._v(" "), _c('span', { staticClass: "close", on: { "click": function click($event) {
+                    $event.preventDefault();return _vm.close($event);
+                } } }, [_vm._v("×")])]), _vm._v(" "), _c('form', [_c('div', { staticClass: "form-group" }, [_c('label', { attrs: { "for": "accessTokenURL" } }, [_vm._v("Access Token URL")]), _vm._v(" "), _c('input', { directives: [{ name: "model", rawName: "v-model", value: _vm.auth.accessTokenURL, expression: "auth.accessTokenURL" }], attrs: { "type": "url", "required": "", "name": "accessTokenURL", "id": "accessTokenURL" }, domProps: { "value": _vm.auth.accessTokenURL }, on: { "input": function input($event) {
+                    if ($event.target.composing) {
+                        return;
+                    }_vm.$set(_vm.auth, "accessTokenURL", $event.target.value);
+                } } })]), _vm._v(" "), _c('div', { staticClass: "form-group" }, [_c('label', { attrs: { "for": "clientID" } }, [_vm._v("Client ID")]), _vm._v(" "), _c('input', { directives: [{ name: "model", rawName: "v-model", value: _vm.auth.clientID, expression: "auth.clientID" }], attrs: { "type": "text", "required": "", "name": "clientID", "id": "clientID" }, domProps: { "value": _vm.auth.clientID }, on: { "input": function input($event) {
+                    if ($event.target.composing) {
+                        return;
+                    }_vm.$set(_vm.auth, "clientID", $event.target.value);
+                } } })]), _vm._v(" "), _c('div', { staticClass: "form-group" }, [_c('label', { attrs: { "for": "clientSecret" } }, [_vm._v("Client Secret")]), _vm._v(" "), _c('input', { directives: [{ name: "model", rawName: "v-model", value: _vm.auth.clientSecret, expression: "auth.clientSecret" }], attrs: { "type": "text", "required": "", "name": "clientSecret", "id": "clientSecret" }, domProps: { "value": _vm.auth.clientSecret }, on: { "input": function input($event) {
+                    if ($event.target.composing) {
+                        return;
+                    }_vm.$set(_vm.auth, "clientSecret", $event.target.value);
+                } } })]), _vm._v(" "), _c('div', { staticClass: "form-group" }, [_c('label', { attrs: { "for": "scope" } }, [_vm._v("Scope")]), _vm._v(" "), _c('input', { directives: [{ name: "model", rawName: "v-model", value: _vm.auth.scope, expression: "auth.scope" }], attrs: { "type": "text", "name": "scope", "id": "scope", "placeholder": "eg. read:org, write:org" }, domProps: { "value": _vm.auth.scope }, on: { "input": function input($event) {
+                    if ($event.target.composing) {
+                        return;
+                    }_vm.$set(_vm.auth, "scope", $event.target.value);
+                } } })]), _vm._v(" "), _c('div', { staticClass: "form-group" }, [_c('button', { staticClass: "submit", attrs: { "type": "submit" }, on: { "click": function click($event) {
+                    $event.preventDefault();return _vm.requestToken($event);
+                } } }, [_vm._v("Request Token")])]), _vm._v(" "), _vm.error ? _c('div', { staticClass: "error" }, [_vm._v(" " + _vm._s(_vm.error) + " ")]) : _vm._e()])])]);
+    }, staticRenderFns: [], _scopeId: 'data-v-4aa7aade',
+    props: {
+        "client": {
+            type: Object,
+            default: function _default() {
+                return {};
+            }
+        },
+        "isOpen": {
+            type: Boolean,
+            default: function _default() {
+                return true;
+            }
+
+        }
+    },
+    data: function data() {
+        return {
+            error: "",
+            token: "",
+            auth: {
+                accessTokenURL: "",
+                clientID: this.client.clientId,
+                clientSecret: this.client.clientSecret,
+                scope: this.client.scope
+            }
+        };
+    },
+
+    methods: {
+        requestToken: function () {
+            var _ref = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee() {
+                var call, url, formData, config, response;
+                return regenerator.wrap(function _callee$(_context) {
+                    var this$1 = this;
+
+                    while (1) {
+                        switch (_context.prev = _context.next) {
+                            case 0:
+                                call = axios$1.create();
+
+
+                                call.interceptors.response.use(function (response) {
+                                    return response;
+                                }, function (error) {
+
+                                    // Do something with response error
+                                    if (error.response.status === 401) {}
+
+                                    return Promise.reject(error.response);
+                                });
+
+                                url = this$1.auth.accessTokenURL;
+                                formData = {
+                                    grant_type: "client_credentials"
+                                };
+
+
+                                if (this$1.auth.scope) {
+                                    formData.scope = this$1.auth.scope;
+                                }
+
+                                config = {
+                                    url: url,
+                                    method: 'POST',
+                                    headers: {
+                                        'accept': 'application/json',
+                                        'Content-Type': 'application/x-www-form-urlencoded'
+                                    },
+                                    params: formData,
+                                    data: {},
+                                    auth: {
+                                        username: this$1.auth.clientID,
+                                        password: this$1.auth.clientSecret
+                                    }
+                                };
+                                _context.prev = 7;
+                                _context.next = 10;
+                                return call.request(config);
+
+                            case 10:
+                                response = _context.sent;
+
+                                console.log(response);
+
+                                this$1.$root.$emit('accessToken', response.data);
+
+                                this$1.token = "";
+                                this$1.close();
+
+                                _context.next = 21;
+                                break;
+
+                            case 17:
+                                _context.prev = 17;
+                                _context.t0 = _context['catch'](7);
+
+                                console.log(_context.t0);
+                                this$1.error = "Something went wrong!";
+
+                            case 21:
+                            case 'end':
+                                return _context.stop();
+                        }
+                    }
+                }, _callee, this, [[7, 17]]);
+            }));
+
+            function requestToken() {
+                return _ref.apply(this, arguments);
+            }
+
+            return requestToken;
+        }(),
+        close: function close() {
+            this.isOpen = false;
+        }
+    }
+
+};
+
+(function () {
+    if (typeof document !== 'undefined') {
+        var head = document.head || document.getElementsByTagName('head')[0],
+            style = document.createElement('style'),
             css = ".api[data-v-13776bac] { /* background-color: yellow; */ } .api .header[data-v-13776bac] { display: flex; align-items: center; padding: 10px 20px 10px 0px; cursor: pointer; transition: all .2s; border-bottom: 1px solid rgba(59, 65, 81, 0.3); font-size: 24px; margin: 0 0 5px; font-family: sans-serif; color: #3b4151; flex-wrap: wrap; } .api .header .host[data-v-13776bac] { font-size: 14px; font-weight: 400; padding: 0px; font-family: sans-serif; color: #3b4151; flex: 1; } .api .header .title[data-v-13776bac] { font-weight: 700; margin-right: 15px; } .api .header .description[data-v-13776bac] { font-size: 14px; font-weight: 400; flex: 1; padding: 0px; font-family: sans-serif; color: #3b4151; text-align: right; } .api .select[data-v-13776bac] { border: 1px solid; background: transparent; padding: 0px 10px; } .api .table .header[data-v-13776bac] { justify-content: space-between; } .api .table .header label[data-v-13776bac] { font-size: 18px; } .api .table .header .left[data-v-13776bac] { text-align: left; } .api .table .header .right[data-v-13776bac] { text-align: right; } .api .table h3[data-v-13776bac] { margin: 15px 0px; } .api .table h4[data-v-13776bac] { margin: 10px 0px; } .api .definitions[data-v-13776bac] { border: 1px solid rgba(59, 65, 81, 0.3); margin-top: 70px; } .api .definitions .header[data-v-13776bac] { padding: 10px; } .api .definitions .models[data-v-13776bac] { padding: 10px; } .api .definitions .models .model[data-v-13776bac] { border-color: rgba(59, 65, 81, 0.3); background: rgba(0, 0, 0, 0.1); padding: 10px 20px; margin-bottom: 10px; border-radius: 5px; } ";style.type = 'text/css';if (style.styleSheet) {
             style.styleSheet.cssText = css;
         } else {
@@ -4201,7 +4441,7 @@ var VSwagger = { render: function render() {
                     });_vm.authorization = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
                 } } }, [_c('option', { attrs: { "value": "" } }, [_vm._v("Choose")]), _vm._v(" "), _vm._l(_vm.authclients, function (client, index) {
             return _c('option', { key: index, domProps: { "value": client } }, [_vm._v(_vm._s(client.clientName))]);
-        })], 2)])]), _vm._v(" "), _vm._l(_vm.tags, function (tag, index) {
+        })], 2)]), _vm._v(" "), _vm.authorization ? _c('authentication', { attrs: { "client": _vm.authorization, "isOpen": true } }) : _vm._e()], 1), _vm._v(" "), _vm._l(_vm.tags, function (tag, index) {
             return _c('section', { key: index }, [_c('h3', [_vm._v(_vm._s(tag.name))]), _vm._v(" "), _c('p', [_vm._v(_vm._s(tag.description))]), _vm._v(" "), _vm._l(_vm.paths[tag.name], function (resources, path) {
                 return _c('div', { key: path }, [_vm._t("default"), _vm._v(" "), _vm._l(resources, function (item, method) {
                     return _c('request', { key: method, attrs: { "method": method, "url": path, "description": item.summary, "headers": item.headers, "path": item.parameters, "params": item.parameters, "body": item.responses, "resource": item } });
@@ -4228,6 +4468,7 @@ var VSwagger = { render: function render() {
     data: function data() {
 
         return {
+            accessToken: '',
             scheme: 'https',
             authorization: '',
             specInfo: this.spec,
@@ -4338,7 +4579,8 @@ var VSwagger = { render: function render() {
     },
     components: {
         request: request,
-        model: model
+        model: model,
+        authentication: authentication
     }
 };
 
